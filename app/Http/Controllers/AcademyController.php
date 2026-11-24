@@ -90,4 +90,19 @@ public function show(Request $request, string $id)
 
         return response()->json(null, 204);
     }
+
+    public function courses(Request $request, string $id)
+{
+    $academy = Academy::findOrFail($id);
+
+    if ($academy->user_id !== $request->user()->id) {
+        return response()->json([
+            'message' => 'No tienes permiso para consultar los cursos de esta academia'
+        ], 403);
+    }
+
+    $courses = $academy->courses()->get();
+
+    return response()->json($courses, 200);
+}
 }
